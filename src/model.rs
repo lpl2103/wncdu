@@ -152,7 +152,13 @@ impl TreeModel {
         self.entries[idx].items = total_items;
         self.entries[idx].has_error = any_error;
 
-        (total_size, total_disk_size, total_items, any_error)
+        let returned_items = if idx == 0 {
+            total_items
+        } else {
+            total_items.saturating_add(1)
+        };
+
+        (total_size, total_disk_size, returned_items, any_error)
     }
 
     /// Reconstructs the full absolute filesystem path for an entry by walking up its parents.
@@ -182,7 +188,11 @@ impl TreeModel {
         let entry = self.entries[idx].clone();
         let sub_size = entry.size;
         let sub_disk = entry.disk_size;
-        let sub_items = entry.items;
+        let sub_items = if entry.is_dir() {
+            entry.items.saturating_add(1)
+        } else {
+            1
+        };
 
         // Remove from parent's children list
         if let Some(parent_idx) = entry.parent {
@@ -260,7 +270,7 @@ mod tests {
 
         assert_eq!(tree.total_size(), 3000);
         assert_eq!(tree.total_disk_size(), 8192);
-        assert_eq!(tree.total_items(), 2);
+        assert_eq!(tree.total_items(), 3);
     }
 
     #[test]
@@ -276,11 +286,15 @@ mod tests {
 
         tree.recalculate_totals();
         assert_eq!(tree.total_size(), 1000);
+        assert_eq!(tree.total_items(), 2);
 
         tree.remove_entry(file1_idx);
         assert_eq!(tree.total_size(), 0);
-        assert_eq!(tree.total_items(), 0);
+        assert_eq!(tree.total_items(), 1); // folder1 remains
         assert!(tree.entries[dir1_idx].children.is_empty());
+
+        tree.remove_entry(dir1_idx);
+        assert_eq!(tree.total_items(), 0);
     }
 
     #[test]
