@@ -1,0 +1,36 @@
+[package]
+name = "winncdu"
+version = "0.1.0"
+edition = "2024"
+description = "Fast disk usage analyzer with TUI for Windows, inspired by ncdu"
+license = "MIT"
+authors = ["Leandro"]
+
+[dependencies]
+ratatui = "0.29"
+crossterm = { version = "0.28", features = ["event-stream"] }
+clap = { version = "4.5", features = ["derive"] }
+anyhow = "1.0"
+thiserror = "2.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+rayon = "1.10"
+crossbeam-channel = "0.5"
+compact_str = "0.8"
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
+glob = "0.3"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.59", features = [
+    "Win32_Storage_FileSystem",
+    "Win32_Foundation",
+    "Win32_System_IO",
+    "Win32_UI_Shell",
+] }
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true
