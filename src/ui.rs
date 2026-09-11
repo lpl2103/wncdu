@@ -1,6 +1,6 @@
 //! Terminal User Interface rendering using Ratatui.
 //!
-//! Provides pixel-perfect visual parity with ncdu:
+//! Provides pixel-perfect visual parity with ncdu, localized in Brazilian Portuguese (pt-BR):
 //! - Real-time progress screen during scanning
 //! - Interactive browser with proportional bar charts, alignment, and color highlights
 //! - Contextual modals for Help, File Deletion Confirmation, and Item Information
@@ -37,14 +37,14 @@ pub fn render_scan_screen(frame: &mut Frame, progress: &ScanProgress, is_si: boo
             " winncdu ",
             Style::default().bg(Color::Cyan).fg(Color::Black).bold(),
         ),
-        Span::raw(" Scanning directory..."),
+        Span::raw(" Escaneando diretório..."),
     ]);
     frame.render_widget(Paragraph::new(header_text), chunks[0]);
 
     // Center Card
     let card_area = centered_rect(70, 50, chunks[1]);
     let block = Block::default()
-        .title(" Filesystem Scan in Progress ")
+        .title(" Escaneamento de Disco em Andamento ")
         .borders(Borders::ALL)
         .border_type(BorderType::Rounded)
         .border_style(Style::default().fg(Color::Cyan));
@@ -71,13 +71,16 @@ pub fn render_scan_screen(frame: &mut Frame, progress: &ScanProgress, is_si: boo
         inner_area.width.saturating_sub(4) as usize,
     );
     let path_line = Line::from(vec![
-        Span::styled("Path: ", Style::default().fg(Color::Yellow).bold()),
+        Span::styled("Caminho: ", Style::default().fg(Color::Yellow).bold()),
         Span::raw(curr_path_truncated),
     ]);
     frame.render_widget(Paragraph::new(path_line), info_chunks[0]);
 
     let items_line = Line::from(vec![
-        Span::styled("Total items:   ", Style::default().fg(Color::White).bold()),
+        Span::styled(
+            "Total de itens:  ",
+            Style::default().fg(Color::White).bold(),
+        ),
         Span::styled(
             format_count(progress.items_scanned),
             Style::default().fg(Color::Green),
@@ -86,7 +89,10 @@ pub fn render_scan_screen(frame: &mut Frame, progress: &ScanProgress, is_si: boo
     frame.render_widget(Paragraph::new(items_line), info_chunks[2]);
 
     let bytes_line = Line::from(vec![
-        Span::styled("Total size:    ", Style::default().fg(Color::White).bold()),
+        Span::styled(
+            "Tamanho total:   ",
+            Style::default().fg(Color::White).bold(),
+        ),
         Span::styled(
             format_size(progress.bytes_scanned, is_si),
             Style::default().fg(Color::Green),
@@ -95,7 +101,10 @@ pub fn render_scan_screen(frame: &mut Frame, progress: &ScanProgress, is_si: boo
     frame.render_widget(Paragraph::new(bytes_line), info_chunks[3]);
 
     let dirs_line = Line::from(vec![
-        Span::styled("Dirs scanned:  ", Style::default().fg(Color::White).bold()),
+        Span::styled(
+            "Pastas lidas:    ",
+            Style::default().fg(Color::White).bold(),
+        ),
         Span::raw(format_count(progress.dirs_scanned)),
     ]);
     frame.render_widget(Paragraph::new(dirs_line), info_chunks[4]);
@@ -106,7 +115,10 @@ pub fn render_scan_screen(frame: &mut Frame, progress: &ScanProgress, is_si: boo
         Color::DarkGray
     };
     let errors_line = Line::from(vec![
-        Span::styled("Errors:        ", Style::default().fg(Color::White).bold()),
+        Span::styled(
+            "Erros de leitura:",
+            Style::default().fg(Color::White).bold(),
+        ),
         Span::styled(
             format_count(progress.errors),
             Style::default().fg(err_color),
@@ -119,7 +131,7 @@ pub fn render_scan_screen(frame: &mut Frame, progress: &ScanProgress, is_si: boo
             " [q] ",
             Style::default().fg(Color::Black).bg(Color::Yellow).bold(),
         ),
-        Span::raw(" Abort scan and inspect partial results"),
+        Span::raw(" Cancelar e inspecionar resultados parciais"),
     ]);
     frame.render_widget(
         Paragraph::new(hint_line).alignment(Alignment::Center),
@@ -128,7 +140,7 @@ pub fn render_scan_screen(frame: &mut Frame, progress: &ScanProgress, is_si: boo
 
     // Bottom footer
     let bottom_text = Line::from(vec![Span::raw(
-        " Scanning in background with high-performance Win32 API...",
+        " Escaneando em segundo plano com API Win32 nativa de alto desempenho...",
     )]);
     frame.render_widget(
         Paragraph::new(bottom_text).style(Style::default().fg(Color::DarkGray)),
@@ -196,17 +208,17 @@ pub fn render_browser_screen(frame: &mut Frame, state: &BrowserState) {
     // 4. Summary Stats Footer
     let root_entry = &state.tree.entries[0];
     let summary_line = Line::from(vec![
-        Span::styled(" Total disk usage: ", Style::default().bold()),
+        Span::styled(" Uso em disco: ", Style::default().bold()),
         Span::styled(
             format_size(root_entry.disk_size, state.use_si_units),
             Style::default().fg(Color::Green),
         ),
-        Span::styled("   Apparent size: ", Style::default().bold()),
+        Span::styled("   Tamanho aparente: ", Style::default().bold()),
         Span::styled(
             format_size(root_entry.size, state.use_si_units),
             Style::default().fg(Color::Green),
         ),
-        Span::styled("   Items: ", Style::default().bold()),
+        Span::styled("   Itens: ", Style::default().bold()),
         Span::styled(
             format_count(root_entry.items),
             Style::default().fg(Color::Cyan),
@@ -223,28 +235,28 @@ pub fn render_browser_screen(frame: &mut Frame, state: &BrowserState) {
             " ? ",
             Style::default().bg(Color::Yellow).fg(Color::Black).bold(),
         ),
-        Span::raw("Help "),
+        Span::raw("Ajuda "),
         Span::styled(
             " Enter ",
             Style::default().bg(Color::White).fg(Color::Black),
         ),
-        Span::raw("Open "),
+        Span::raw("Abrir "),
         Span::styled(
             " Backspace ",
             Style::default().bg(Color::White).fg(Color::Black),
         ),
-        Span::raw("Back "),
+        Span::raw("Voltar "),
         Span::styled(
             " d ",
             Style::default().bg(Color::Red).fg(Color::White).bold(),
         ),
-        Span::raw("Delete "),
+        Span::raw("Excluir "),
         Span::styled(" s ", Style::default().bg(Color::White).fg(Color::Black)),
-        Span::raw("Sort "),
+        Span::raw("Ordenar "),
         Span::styled(" i ", Style::default().bg(Color::White).fg(Color::Black)),
         Span::raw("Info "),
         Span::styled(" q ", Style::default().bg(Color::White).fg(Color::Black)),
-        Span::raw("Quit"),
+        Span::raw("Sair"),
     ]);
     frame.render_widget(Paragraph::new(binds_line), chunks[4]);
 }
@@ -275,44 +287,44 @@ fn render_file_table(frame: &mut Frame, state: &BrowserState, area: Rect) {
     };
 
     let size_header = if state.sort_col == SortColumn::DiskSize {
-        format!("DiskUsage {sort_indicator}")
+        format!("UsoDisco {sort_indicator}")
     } else if state.sort_col == SortColumn::Size {
-        format!("Size {sort_indicator}")
+        format!("Tamanho {sort_indicator}")
     } else {
-        "Size".to_string()
+        "Tamanho".to_string()
     };
     header_cells.push(Cell::from(size_header));
 
     if state.show_graph {
-        header_cells.push(Cell::from("Graph"));
+        header_cells.push(Cell::from("Gráfico"));
     }
 
     if state.show_percent {
-        header_cells.push(Cell::from("Percent"));
+        header_cells.push(Cell::from("Percentual"));
     }
 
     if state.show_items {
         let items_header = if state.sort_col == SortColumn::Items {
-            format!("Items {sort_indicator}")
+            format!("Itens {sort_indicator}")
         } else {
-            "Items".to_string()
+            "Itens".to_string()
         };
         header_cells.push(Cell::from(items_header));
     }
 
     if state.show_mtime {
         let mtime_header = if state.sort_col == SortColumn::Mtime {
-            format!("Modified {sort_indicator}")
+            format!("Modificado {sort_indicator}")
         } else {
-            "Modified".to_string()
+            "Modificado".to_string()
         };
         header_cells.push(Cell::from(mtime_header));
     }
 
     let name_header = if state.sort_col == SortColumn::Name {
-        format!("Name {sort_indicator}")
+        format!("Nome {sort_indicator}")
     } else {
-        "Name".to_string()
+        "Nome".to_string()
     };
     header_cells.push(Cell::from(name_header));
 
@@ -416,7 +428,7 @@ fn render_file_table(frame: &mut Frame, state: &BrowserState, area: Rect) {
         constraints.push(Constraint::Length(14)); // Graph
     }
     if state.show_percent {
-        constraints.push(Constraint::Length(8)); // Percent
+        constraints.push(Constraint::Length(11)); // Percent
     }
     if state.show_items {
         constraints.push(Constraint::Length(10)); // Items
@@ -433,13 +445,13 @@ fn render_file_table(frame: &mut Frame, state: &BrowserState, area: Rect) {
     frame.render_widget(table, area);
 }
 
-/// Renders the help modal popup dialog.
+/// Renders the help modal popup dialog in Brazilian Portuguese.
 pub fn render_help_modal(frame: &mut Frame) {
-    let area = centered_rect(65, 75, frame.area());
+    let area = centered_rect(65, 78, frame.area());
     frame.render_widget(Clear, area);
 
     let block = Block::default()
-        .title(" winncdu Help - Key Bindings ")
+        .title(" Ajuda do WinNCDU - Teclas de Atalho ")
         .borders(Borders::ALL)
         .border_type(BorderType::Double)
         .border_style(Style::default().fg(Color::Yellow));
@@ -449,47 +461,49 @@ pub fn render_help_modal(frame: &mut Frame) {
 
     let text = vec![
         Line::from(vec![Span::styled(
-            "Navigation:",
+            "Navegação:",
             Style::default().fg(Color::Cyan).bold(),
         )]),
-        Line::from("  up, k           Move cursor up"),
-        Line::from("  down, j         Move cursor down"),
-        Line::from("  enter, right, l Enter directory"),
-        Line::from("  backspace, left, h Go up to parent directory"),
-        Line::from("  home, g         Jump to first item"),
-        Line::from("  end, G          Jump to last item"),
-        Line::from("  pgup, pgdn      Page up / Page down"),
+        Line::from("  ↑, k            Mover cursor para cima"),
+        Line::from("  ↓, j            Mover cursor para baixo"),
+        Line::from("  enter, →, l     Entrar no diretório selecionado"),
+        Line::from("  backspace, ←, h Subir para o diretório pai"),
+        Line::from("  home, g         Ir para o primeiro item da lista"),
+        Line::from("  end, G          Ir para o último item da lista"),
+        Line::from("  pgup, pgdn      Rolar uma página para cima / baixo"),
         Line::from(""),
         Line::from(vec![Span::styled(
-            "Sorting:",
+            "Ordenação:",
             Style::default().fg(Color::Cyan).bold(),
         )]),
-        Line::from("  s               Sort by size (toggle asc/desc)"),
-        Line::from("  n               Sort by name (toggle asc/desc)"),
-        Line::from("  c               Sort by items count"),
-        Line::from("  m               Sort by modification time"),
-        Line::from("  a               Toggle apparent size vs disk usage"),
-        Line::from("  t               Toggle directories first"),
+        Line::from("  s               Ordenar por tamanho (alterna cresc/decresc)"),
+        Line::from("  n               Ordenar por nome (alterna A-Z / Z-A)"),
+        Line::from("  C               Ordenar por quantidade de itens"),
+        Line::from("  M               Ordenar por data de modificação"),
+        Line::from("  a               Alternar tamanho aparente vs uso em disco"),
+        Line::from("  t               Alternar pastas agrupadas no topo"),
         Line::from(""),
         Line::from(vec![Span::styled(
-            "View Options:",
+            "Exibição e Colunas:",
             Style::default().fg(Color::Cyan).bold(),
         )]),
-        Line::from("  g               Toggle graph bar style (# vs blocks vs off)"),
-        Line::from("  p               Toggle percentage column"),
-        Line::from("  e               Toggle hidden files/folders"),
-        Line::from("  i               Show detailed item info"),
+        Line::from("  c               Exibir / ocultar coluna de contagem de itens"),
+        Line::from("  m               Exibir / ocultar coluna de data de modificação"),
+        Line::from("  g               Alternar estilo do gráfico (# vs blocos Unicode)"),
+        Line::from("  p               Exibir / ocultar coluna de percentual"),
+        Line::from("  e               Exibir / ocultar arquivos e pastas ocultos"),
+        Line::from("  i               Exibir detalhes e propriedades do item"),
         Line::from(""),
         Line::from(vec![Span::styled(
-            "Actions:",
+            "Ações:",
             Style::default().fg(Color::Cyan).bold(),
         )]),
-        Line::from("  d               Delete selected item (with confirmation)"),
-        Line::from("  ?               Toggle this help window"),
-        Line::from("  q               Quit application"),
+        Line::from("  d               Excluir item selecionado (com confirmação)"),
+        Line::from("  ?               Abrir / fechar esta janela de ajuda"),
+        Line::from("  q               Sair do programa"),
         Line::from(""),
         Line::from(vec![Span::styled(
-            "Press any key to close this help window",
+            "Pressione qualquer tecla para fechar esta janela de ajuda",
             Style::default().fg(Color::Yellow),
         )]),
     ];
@@ -498,7 +512,7 @@ pub fn render_help_modal(frame: &mut Frame) {
     frame.render_widget(paragraph, inner);
 }
 
-/// Renders the file/directory delete confirmation dialog.
+/// Renders the file/directory delete confirmation dialog in Brazilian Portuguese.
 pub fn render_delete_modal(
     frame: &mut Frame,
     item_name: &str,
@@ -506,11 +520,11 @@ pub fn render_delete_modal(
     size: u64,
     is_si: bool,
 ) {
-    let area = centered_rect(55, 30, frame.area());
+    let area = centered_rect(58, 30, frame.area());
     frame.render_widget(Clear, area);
 
     let block = Block::default()
-        .title(" Confirm Permanent Deletion ")
+        .title(" Confirmar Exclusão Permanente ")
         .borders(Borders::ALL)
         .border_type(BorderType::Double)
         .border_style(Style::default().fg(Color::Red).bold());
@@ -519,42 +533,42 @@ pub fn render_delete_modal(
     frame.render_widget(block, area);
 
     let item_type = if is_dir {
-        "directory and all its contents"
+        "este diretório e todo o seu conteúdo"
     } else {
-        "file"
+        "este arquivo"
     };
     let text = vec![
         Line::from(""),
         Line::from(vec![
-            Span::styled("WARNING: ", Style::default().fg(Color::Red).bold()),
-            Span::raw(format!("Are you sure you want to delete this {item_type}?")),
+            Span::styled("ATENÇÃO: ", Style::default().fg(Color::Red).bold()),
+            Span::raw(format!("Tem certeza que deseja excluir {item_type}?")),
         ]),
         Line::from(""),
         Line::from(vec![
-            Span::styled(" Target: ", Style::default().fg(Color::White).bold()),
+            Span::styled(" Alvo:    ", Style::default().fg(Color::White).bold()),
             Span::styled(item_name, Style::default().fg(Color::Yellow).bold()),
         ]),
         Line::from(vec![
-            Span::styled(" Size:   ", Style::default().fg(Color::White).bold()),
+            Span::styled(" Tamanho: ", Style::default().fg(Color::White).bold()),
             Span::styled(format_size(size, is_si), Style::default().fg(Color::Green)),
         ]),
         Line::from(""),
         Line::from(vec![Span::styled(
-            "This action is permanent and CANNOT be undone!",
+            "Esta ação é definitiva e NÃO PODERÁ ser desfeita!",
             Style::default().fg(Color::Red),
         )]),
         Line::from(""),
         Line::from(vec![
             Span::styled(
-                " [y] ",
+                " [s / y] ",
                 Style::default().bg(Color::Red).fg(Color::White).bold(),
             ),
-            Span::raw(" Yes, Delete Permanently    "),
+            Span::raw(" Sim, Excluir Definitivamente    "),
             Span::styled(
                 " [n / Esc] ",
                 Style::default().bg(Color::Green).fg(Color::Black).bold(),
             ),
-            Span::raw(" Cancel"),
+            Span::raw(" Cancelar"),
         ]),
     ];
 
@@ -562,13 +576,13 @@ pub fn render_delete_modal(
     frame.render_widget(paragraph, inner);
 }
 
-/// Renders the detailed item info dialog.
+/// Renders the detailed item info dialog in Brazilian Portuguese.
 pub fn render_info_modal(frame: &mut Frame, entry: &DirEntry, full_path: &Path, is_si: bool) {
     let area = centered_rect(65, 45, frame.area());
     frame.render_widget(Clear, area);
 
     let block = Block::default()
-        .title(" Item Information ")
+        .title(" Detalhes do Item ")
         .borders(Borders::ALL)
         .border_type(BorderType::Rounded)
         .border_style(Style::default().fg(Color::Cyan));
@@ -577,28 +591,28 @@ pub fn render_info_modal(frame: &mut Frame, entry: &DirEntry, full_path: &Path, 
     frame.render_widget(block, area);
 
     let type_str = match entry.entry_type {
-        EntryType::Directory => "Directory",
-        EntryType::File => "Regular File",
-        EntryType::Symlink => "Symbolic Link / Junction",
-        EntryType::Other => "Other / Device",
+        EntryType::Directory => "Diretório / Pasta",
+        EntryType::File => "Arquivo Comum",
+        EntryType::Symlink => "Link Simbólico / Junção",
+        EntryType::Other => "Outro / Dispositivo",
     };
 
     let text = vec![
         Line::from(""),
         Line::from(vec![
-            Span::styled(" Name:          ", Style::default().bold()),
+            Span::styled(" Nome:              ", Style::default().bold()),
             Span::styled(entry.name.as_str(), Style::default().fg(Color::Yellow)),
         ]),
         Line::from(vec![
-            Span::styled(" Full Path:     ", Style::default().bold()),
+            Span::styled(" Caminho Completo:  ", Style::default().bold()),
             Span::raw(full_path.to_string_lossy()),
         ]),
         Line::from(vec![
-            Span::styled(" Type:          ", Style::default().bold()),
+            Span::styled(" Tipo:              ", Style::default().bold()),
             Span::styled(type_str, Style::default().fg(Color::Cyan)),
         ]),
         Line::from(vec![
-            Span::styled(" Apparent Size: ", Style::default().bold()),
+            Span::styled(" Tamanho Aparente:  ", Style::default().bold()),
             Span::styled(
                 format!(
                     "{} ({} bytes)",
@@ -609,7 +623,7 @@ pub fn render_info_modal(frame: &mut Frame, entry: &DirEntry, full_path: &Path, 
             ),
         ]),
         Line::from(vec![
-            Span::styled(" Disk Usage:    ", Style::default().bold()),
+            Span::styled(" Uso em Disco:      ", Style::default().bold()),
             Span::styled(
                 format!(
                     "{} ({} bytes)",
@@ -620,24 +634,24 @@ pub fn render_info_modal(frame: &mut Frame, entry: &DirEntry, full_path: &Path, 
             ),
         ]),
         Line::from(vec![
-            Span::styled(" Total Items:   ", Style::default().bold()),
+            Span::styled(" Total de Itens:    ", Style::default().bold()),
             Span::styled(format_count(entry.items), Style::default().fg(Color::White)),
         ]),
         Line::from(vec![
-            Span::styled(" Last Modified: ", Style::default().bold()),
+            Span::styled(" Última Modificação:", Style::default().bold()),
             Span::raw(format_mtime(entry.mtime)),
         ]),
         Line::from(vec![
-            Span::styled(" Hidden:        ", Style::default().bold()),
-            Span::raw(if entry.is_hidden { "Yes" } else { "No" }),
+            Span::styled(" Arquivo Oculto:    ", Style::default().bold()),
+            Span::raw(if entry.is_hidden { "Sim" } else { "Não" }),
         ]),
         Line::from(vec![
-            Span::styled(" Has Errors:    ", Style::default().bold()),
+            Span::styled(" Possui Erros:      ", Style::default().bold()),
             Span::styled(
                 if entry.has_error {
-                    "Yes (Access Denied / Unreadable)"
+                    "Sim (Acesso Negado ou Ilegível)"
                 } else {
-                    "No"
+                    "Não"
                 },
                 if entry.has_error {
                     Style::default().fg(Color::Red)
@@ -648,7 +662,7 @@ pub fn render_info_modal(frame: &mut Frame, entry: &DirEntry, full_path: &Path, 
         ]),
         Line::from(""),
         Line::from(vec![Span::styled(
-            "Press [Enter], [i] or [Esc] to close",
+            "Pressione [Enter], [i] ou [Esc] para fechar",
             Style::default().fg(Color::DarkGray),
         )]),
     ];

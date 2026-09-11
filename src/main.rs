@@ -23,35 +23,41 @@ use winncdu::model::DirEntry;
 use winncdu::scanner::{ScanConfig, ScanMessage, ScanProgress, start_scan};
 use winncdu::ui;
 
-/// WinNCDU - Windows Disk Usage Analyzer with NCurses-like interface
+/// WinNCDU - Analisador de uso de disco para Windows com interface interativa (estilo ncdu)
 #[derive(Parser, Debug)]
-#[command(name = "winncdu", author, version, about, long_about = None)]
+#[command(
+    name = "winncdu",
+    author,
+    version,
+    about = "Analisador de uso de disco interativo e de alto desempenho para Windows, inspirado no ncdu",
+    long_about = None
+)]
 struct Cli {
-    /// Directory or drive path to analyze
+    /// Caminho do diretório ou unidade para analisar
     #[arg(default_value = ".")]
     path: PathBuf,
 
-    /// Do not cross filesystem / drive boundaries
+    /// Não cruzar limites de partições / sistemas de arquivos
     #[arg(short = 'x', long)]
     one_file_system: bool,
 
-    /// Follow symbolic links and junctions
+    /// Seguir links simbólicos e junções do Windows
     #[arg(short = 'L', long)]
     follow_symlinks: bool,
 
-    /// Exclude files and directories matching glob pattern
-    #[arg(long = "exclude", value_name = "PATTERN")]
+    /// Excluir arquivos e pastas que correspondam ao padrão glob
+    #[arg(long = "exclude", value_name = "PADRÃO")]
     exclude: Vec<String>,
 
-    /// Exclude directories containing CACHEDIR.TAG
+    /// Excluir pastas de cache contendo CACHEDIR.TAG
     #[arg(long)]
     exclude_caches: bool,
 
-    /// Exclude hidden files and directories
+    /// Excluir arquivos e pastas ocultos
     #[arg(long)]
     exclude_hidden: bool,
 
-    /// Use SI units (powers of 1000: KB, MB, GB) instead of binary (powers of 1024: KiB, MiB, GiB)
+    /// Usar unidades decimais SI (potências de 1000: KB, MB, GB) em vez de binárias (potências de 1024: KiB, MiB, GiB)
     #[arg(long)]
     si: bool,
 }
@@ -104,7 +110,7 @@ fn main() -> Result<()> {
     filter.exclude_hidden = cli.exclude_hidden;
     for pat in &cli.exclude {
         if let Err(e) = filter.add_pattern(pat) {
-            eprintln!("Warning: Invalid exclude pattern '{pat}': {e}");
+            eprintln!("Aviso: Padrão de exclusão inválido '{pat}': {e}");
         }
     }
 
@@ -143,7 +149,7 @@ fn main() -> Result<()> {
     terminal.show_cursor()?;
 
     if let Err(err) = res {
-        eprintln!("Application error: {err:#}");
+        eprintln!("Erro na aplicação: {err:#}");
     }
 
     Ok(())
@@ -264,11 +270,14 @@ fn run_event_loop<B: ratatui::backend::Backend>(
                     }
                     ModalState::DeleteConfirm { target_path, .. } => {
                         match key.code {
-                            KeyCode::Char('y') | KeyCode::Char('Y') => {
+                            KeyCode::Char('s')
+                            | KeyCode::Char('S')
+                            | KeyCode::Char('y')
+                            | KeyCode::Char('Y') => {
                                 let path_to_del = target_path.clone();
                                 *modal = ModalState::None;
                                 if let Err(e) = delete_entry(&path_to_del) {
-                                    tracing::error!("Failed to delete {path_to_del:?}: {e}");
+                                    tracing::error!("Falha ao excluir {path_to_del:?}: {e}");
                                 } else {
                                     browser.remove_selected();
                                 }
