@@ -1,16 +1,16 @@
-//! Integration tests for winncdu scanner, tree model, and browser navigation.
+//! Integration tests for wncdu scanner, tree model, and browser navigation.
 
 use std::fs::{self, File};
 use std::io::Write;
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
-use winncdu::browser::{BrowserState, SortColumn, SortOrder};
-use winncdu::exclude::ExclusionFilter;
-use winncdu::scanner::{ScanConfig, ScanMessage, start_scan};
+use wncdu::browser::{BrowserState, SortColumn, SortOrder};
+use wncdu::exclude::ExclusionFilter;
+use wncdu::scanner::{ScanConfig, ScanMessage, start_scan};
 
 fn create_test_directory() -> PathBuf {
-    let base = std::env::temp_dir().join(format!("winncdu_itest_{}", std::process::id()));
+    let base = std::env::temp_dir().join(format!("wncdu_itest_{}", std::process::id()));
     let _ = fs::remove_dir_all(&base);
     fs::create_dir_all(&base).expect("failed to create temp test root");
 

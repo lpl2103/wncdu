@@ -201,7 +201,7 @@ mod tests {
 
     #[test]
     fn test_truncate_path() {
-        let path = "C:\\Users\\Leandro\\Projects\\Rust\\winncdu\\src\\main.rs";
+        let path = "C:\\Users\\Leandro\\Projects\\Rust\\wncdu\\src\\main.rs";
         assert_eq!(truncate_path(path, 100), path);
         let trunc = truncate_path(path, 20);
         assert_eq!(trunc.chars().count(), 20);

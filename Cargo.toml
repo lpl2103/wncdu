@@ -1,10 +1,15 @@
 [package]
-name = "winncdu"
+name = "wncdu"
 version = "0.1.0"
 edition = "2024"
 description = "Fast disk usage analyzer with TUI for Windows, inspired by ncdu"
 license = "MIT"
 authors = ["Leandro"]
+repository = "https://github.com/lpl2103/wncdu"
+homepage = "https://github.com/lpl2103/wncdu"
+readme = "README.md"
+keywords = ["ncdu", "disk-usage", "tui", "ratatui", "windows"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 ratatui = "0.29"

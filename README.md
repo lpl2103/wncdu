@@ -1,6 +1,10 @@
-# WinNCDU
+# WNCDU
 
-> **WinNCDU** é um analisador de uso de disco interativo e de alto desempenho para Windows (e Linux), desenvolvido em Rust com interface TUI via `ratatui`.
+[![CI](https://github.com/lpl2103/wncdu/actions/workflows/ci.yml/badge.svg)](https://github.com/lpl2103/wncdu/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/lpl2103/wncdu?include_prereleases&style=flat-square)](https://github.com/lpl2103/wncdu/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
+
+> **WNCDU** é um analisador de uso de disco interativo e de alto desempenho para Windows (e Linux), desenvolvido em Rust com interface TUI via `ratatui`.
 > Inspirado no clássico [ncdu](https://dev.yorhel.nl/ncdu) e no [zig-ncdu](https://github.com/ra9fael/zig-ncdu), com foco total nas particularidades do Windows.
 
 ---
@@ -14,6 +18,27 @@
 - **Nomes Inlinados na Stack**: `CompactString` inlina nomes de arquivos até 24 caracteres na stack sem tocar no heap.
 - **Binário Único Estático**: Compilado com LTO completo, CRT estático (`target-feature=+crt-static`) e remoção de símbolos de debug para binários compactos e sem dependências externas.
 - **Interface TUI Rica**: Renderizado com `ratatui`, barras proporcionais clássicas (`#`) e blocos Unicode, métricas em tempo real e modais de ajuda, informações e confirmação de exclusão.
+- **Ícone e Metadados Nativos**: Ícone integrado no executável PE para exibição no Windows Explorer e na barra de tarefas.
+
+---
+
+## 📦 Instalação
+
+### Via Windows Package Manager (Winget)
+
+```powershell
+winget install lpl2103.wncdu
+```
+
+### Download Direto
+
+Baixe o executável pré-compilado `wncdu.exe` na aba [Releases](https://github.com/lpl2103/wncdu/releases/latest) e coloque-o em um diretório presente no seu `PATH`.
+
+### Via Cargo
+
+```bash
+cargo install --git https://github.com/lpl2103/wncdu
+```
 
 ---
 
@@ -49,23 +74,23 @@
 
 ```bash
 # Analisar a pasta atual
-winncdu
+wncdu
 
 # Analisar uma pasta ou unidade específica
-winncdu C:\Users\Leandro
-winncdu D:\
+wncdu C:\Users\Leandro
+wncdu D:\
 
 # Não cruzar partições/drives
-winncdu -x C:\
+wncdu -x C:\
 
 # Excluir pastas ou padrões
-winncdu --exclude "*.tmp" --exclude "node_modules"
+wncdu --exclude "*.tmp" --exclude "node_modules"
 
 # Excluir pastas de cache com CACHEDIR.TAG
-winncdu --exclude-caches
+wncdu --exclude-caches
 
 # Usar unidades decimais (SI: KB, MB, GB) em vez de binárias (KiB, MiB, GiB)
-winncdu --si
+wncdu --si
 ```
 
 ---
@@ -87,7 +112,7 @@ cargo test
 cargo build --release
 ```
 
-O binário final será gerado em `target/release/winncdu.exe`.
+O binário final será gerado em `target/release/wncdu.exe`.
 
 ---
 

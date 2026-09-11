@@ -34,7 +34,7 @@ pub fn render_scan_screen(frame: &mut Frame, progress: &ScanProgress, is_si: boo
     // Header
     let header_text = Line::from(vec![
         Span::styled(
-            " winncdu ",
+            " wncdu ",
             Style::default().bg(Color::Cyan).fg(Color::Black).bold(),
         ),
         Span::raw(" Escaneando diretório..."),
@@ -176,7 +176,7 @@ pub fn render_browser_screen(frame: &mut Frame, state: &BrowserState) {
 
     let title_line = Line::from(vec![
         Span::styled(
-            " winncdu 0.1.0 ",
+            " wncdu 0.1.0 ",
             Style::default().bg(Color::Cyan).fg(Color::Black).bold(),
         ),
         Span::raw(" ~ "),
@@ -451,7 +451,7 @@ pub fn render_help_modal(frame: &mut Frame) {
     frame.render_widget(Clear, area);
 
     let block = Block::default()
-        .title(" Ajuda do WinNCDU - Teclas de Atalho ")
+        .title(" Ajuda do WNCDU - Teclas de Atalho ")
         .borders(Borders::ALL)
         .border_type(BorderType::Double)
         .border_style(Style::default().fg(Color::Yellow));

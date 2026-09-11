@@ -1,4 +1,4 @@
-//! WinNCDU library core modules.
+//! WNCDU library core modules.
 
 pub mod browser;
 pub mod delete;

@@ -77,24 +77,33 @@ fn strip_readonly_recursive(dir: &Path) {
 mod tests {
     use super::*;
     use std::fs::File;
+    use std::io::Write;
 
     #[test]
     fn test_delete_file() {
-        let temp_dir = std::env::temp_dir().join("winncdu_test_delete_file");
-        let _ = fs::create_dir_all(&temp_dir);
-        let test_file = temp_dir.join("temp.txt");
-        File::create(&test_file).unwrap();
+        let temp_dir = std::env::temp_dir().join("wncdu_test_delete_file");
+        let _ = fs::remove_dir_all(&temp_dir);
+        fs::create_dir_all(&temp_dir).unwrap();
 
-        assert!(test_file.exists());
-        delete_entry(&test_file).unwrap();
-        assert!(!test_file.exists());
+        let file_path = temp_dir.join("readonly.txt");
+        let mut f = File::create(&file_path).unwrap();
+        f.write_all(b"hello delete").unwrap();
+        drop(f);
+
+        // Make readonly
+        let mut perms = fs::metadata(&file_path).unwrap().permissions();
+        perms.set_readonly(true);
+        fs::set_permissions(&file_path, perms).unwrap();
+
+        assert!(delete_entry(&file_path).is_ok());
+        assert!(!file_path.exists());
 
         let _ = fs::remove_dir_all(&temp_dir);
     }
 
     #[test]
     fn test_delete_directory_recursive() {
-        let temp_dir = std::env::temp_dir().join("winncdu_test_delete_dir");
+        let temp_dir = std::env::temp_dir().join("wncdu_test_delete_dir");
         let sub_dir = temp_dir.join("nested");
         fs::create_dir_all(&sub_dir).unwrap();
         File::create(sub_dir.join("child.txt")).unwrap();

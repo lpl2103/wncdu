@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    name: Build and Publish Release
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-gnu
+
+      - name: Build release binary
+        run: cargo build --release
+
+      - name: Prepare release archive
+        shell: pwsh
+        run: |
+          $Version = "${{ github.ref_name }}"
+          if (-not $Version -or $Version -eq "") { $Version = "v0.1.0" }
+          $DistDir = "dist"
+          New-Item -ItemType Directory -Force -Path $DistDir | Out-Null
+          
+          Copy-Item "target/x86_64-pc-windows-gnu/release/wncdu.exe" -Destination "$DistDir/wncdu.exe"
+          Copy-Item "README.md" -Destination "$DistDir/README.md"
+          Copy-Item "LICENSE" -Destination "$DistDir/LICENSE"
+          
+          Compress-Archive -Path "$DistDir/*" -DestinationPath "wncdu-$Version-windows-x86_64.zip" -Force
+          Get-FileHash -Path "target/x86_64-pc-windows-gnu/release/wncdu.exe" -Algorithm SHA256 | Out-File "wncdu.exe.sha256"
+          Get-FileHash -Path "wncdu-$Version-windows-x86_64.zip" -Algorithm SHA256 | Out-File "wncdu-windows-x86_64.zip.sha256"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            target/x86_64-pc-windows-gnu/release/wncdu.exe
+            wncdu-*.zip
+            *.sha256
+          generate_release_notes: true
+          draft: false
+          prerelease: false

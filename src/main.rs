@@ -1,4 +1,4 @@
-//! winncdu — Fast disk usage analyzer with TUI for Windows, inspired by ncdu.
+//! wncdu — Fast disk usage analyzer with TUI for Windows, inspired by ncdu.
 //!
 //! A modern, high-performance ncdu port for Windows written in Rust with ratatui.
 
@@ -16,17 +16,17 @@ use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::Duration;
 
-use winncdu::browser::{BrowserState, SortColumn};
-use winncdu::delete::delete_entry;
-use winncdu::exclude::ExclusionFilter;
-use winncdu::model::DirEntry;
-use winncdu::scanner::{ScanConfig, ScanMessage, ScanProgress, start_scan};
-use winncdu::ui;
+use wncdu::browser::{BrowserState, SortColumn};
+use wncdu::delete::delete_entry;
+use wncdu::exclude::ExclusionFilter;
+use wncdu::model::DirEntry;
+use wncdu::scanner::{ScanConfig, ScanMessage, ScanProgress, start_scan};
+use wncdu::ui;
 
-/// WinNCDU - Analisador de uso de disco para Windows com interface interativa (estilo ncdu)
+/// WNCDU - Analisador de uso de disco para Windows com interface interativa (estilo ncdu)
 #[derive(Parser, Debug)]
 #[command(
-    name = "winncdu",
+    name = "wncdu",
     author,
     version,
     about = "Analisador de uso de disco interativo e de alto desempenho para Windows, inspirado no ncdu",
