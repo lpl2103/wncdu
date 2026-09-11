@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.6.0.schema.json
+PackageIdentifier: lpl2103.wncdu
+PackageVersion: 0.1.0
+PackageLocale: en-US
+Publisher: Leandro
+PublisherUrl: https://github.com/lpl2103
+PublisherSupportUrl: https://github.com/lpl2103/wncdu/issues
+PackageName: WNCDU
+PackageUrl: https://github.com/lpl2103/wncdu
+License: MIT
+LicenseUrl: https://github.com/lpl2103/wncdu/blob/main/LICENSE
+ShortDescription: Fast disk usage analyzer with TUI for Windows, inspired by ncdu
+Description: High-performance interactive disk usage analyzer for Windows written in Rust with ratatui TUI, Win32 direct scanner, long path support, and ncdu-compatible keybindings.
+Tags:
+  - ncdu
+  - disk-usage
+  - storage
+  - tui
+  - cli
+  - terminal
+  - rust
+ReleaseNotesUrl: https://github.com/lpl2103/wncdu/releases/tag/v0.1.0
+ManifestType: defaultLocale
+ManifestVersion: 1.6.0

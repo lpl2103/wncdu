@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.6.0.schema.json
+PackageIdentifier: lpl2103.wncdu
+PackageVersion: 0.1.0
+InstallerType: portable
+Commands:
+  - wncdu
+Installers:
+  - Architecture: x64
+    InstallerUrl: https://github.com/lpl2103/wncdu/releases/download/v0.1.0/wncdu.exe
+    InstallerSha256: 184D14DA9076F3A3F9B834E1DE26C5C8BEBA7B7633B13F838535F4066CDFE71F
+ManifestType: installer
+ManifestVersion: 1.6.0
